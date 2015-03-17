@@ -1,0 +1,29 @@
+#!/bin/bash
+
+source ./helper
+
+DIR=$(dirname $(realpath $0))
+JOB_DIR=$DIR/job
+JOBS=$(ls $JOB_DIR)
+
+processJob() {
+	JOB=$1
+	$JOB_DIR/$JOB
+}
+
+checkElevated()
+{
+	at > /dev/null
+	[ $? -ne 0 ] && die "$0 requires elevation (Run As Administrator)"
+}
+
+checkElevated
+echo "processing $(echo $JOBS | wc -w) jobs"
+prepareStagingFolder
+for JOB in $JOBS
+do
+	echo -e "\tprocessing $JOB"
+	processJob $JOB | sed 's/^/\t\t/'
+done
+removeStagingFolder
+echo "all done"

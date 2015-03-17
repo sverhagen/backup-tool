@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source ./helper
+
+packageFolder Desktop $(userProfile)/Desktop

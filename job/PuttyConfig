@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source ./helper
+
+exportRegistryKey PuttyConfig 'HKEY_CURRENT_USER\Software\SimonTatham'

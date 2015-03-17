@@ -1,0 +1,12 @@
+#!/bin/sh
+
+source ./helper
+
+VIRTUAWIN_FOLDER="/cygdrive/c/Program Files (x86)/VirtuaWin"
+
+CONFIG_FOLDER="$(applicationData)/VirtuaWin"
+TARGET_FOLDER="$(stagingFolder)/VirtuaWin"
+
+mkdir --parents $TARGET_FOLDER/modules $TARGET_FOLDER/AppData || die "cannot create folder for VirtuaWin: $TARGET_FOLDER"
+cp --verbose -r "$VIRTUAWIN_FOLDER/modules/"* "$TARGET_FOLDER/modules/" || die "cannot copy VirtuaWin modules: $VIRTUAWIN_FOLDER/modules"
+cp --verbose -r "$CONFIG_FOLDER/"* "$TARGET_FOLDER/AppData/" || die "cannot copy VirtuaWin AppData configuration: $CONFIG_FOLDER"

@@ -9,4 +9,6 @@ Simple scripts to backup my computer
 
 **Why does it fail without elevation?** &mdash; In order to pull stuff from the registry, it needs to be elevated (i.e. "Run As Administrator").
 
-**Your seriously expect *takers* for this?** &mdash; No, I don't. This is for my own, personal use. With GitHub at least I have a backup of my backup tool.
+**Why did you build this yourself?** &mdash; I could not find a simple and straightforward tool that could do this to me, but I'm still open to suggestions.
+
+**You seriously expect *takers* for this?** &mdash; No, I don't. This is for my own, personal use. With GitHub at least I have a backup of my backup tool.

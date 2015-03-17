@@ -44,6 +44,11 @@ userProfile()
 	cygpath $USERPROFILE
 }
 
+applicationData()
+{
+	cygpath $APPDATA
+}
+
 packageFolder()
 {
 	SIMPLE_NAME=$1

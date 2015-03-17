@@ -1,0 +1,10 @@
+#!/bin/sh
+
+source ./helper
+
+SOURCE="$(applicationData)/FileZilla/*.xml"
+TARGET_FOLDER=$(stagingFolder)/FileZillaConfig
+
+mkdir --parents $TARGET_FOLDER
+cp $SOURCE $TARGET_FOLDER/ || die "could not copy FileZilla configuration from $SOURCE to $TARGET_FOLDER"
+echo "copied $(ls -l $TARGET_FOLDER/ | grep -v "^total" | wc -l) files"

@@ -51,8 +51,8 @@ applicationData()
 
 packageFolder()
 {
-	SIMPLE_NAME=$1
-	FOLDER_NAME=$2
+	local SIMPLE_NAME=$1
+	local FOLDER_NAME=$2
 	echo "packaging up folder: $FOLDER_NAME"
 	pushd $FOLDER_NAME
 	tar --absolute-names -zcf $(stagingFolder)/$SIMPLE_NAME.tar.gz * || die "problem packaging as tar: $FOLDER_NAME"
@@ -61,8 +61,8 @@ packageFolder()
 
 exportRegistryKey()
 {
-	SIMPLE_NAME=$1
-	REGISTRY_KEY_NAME=$2
+	local SIMPLE_NAME=$1
+	local REGISTRY_KEY_NAME=$2
 	echo "exporting registry key: $REGISTRY_KEY_NAME"
 	regedit /e $(cygpath --windows $(stagingFolder)/$SIMPLE_NAME.reg) $REGISTRY_KEY_NAME
 }

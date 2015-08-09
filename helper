@@ -23,8 +23,8 @@ stagingFolder()
 
 listStagingFolder()
 {
-	echo "contents of staging folder:"
-	ls -lh $(stagingFolder) | sed 's/^/\t/'
+	echo "contents of staging folder: $(du -sh $(stagingFolder) | awk '{print $1;}')"
+	du -sh $(stagingFolder)/* | sed 's/^/\t/'
 }
 
 removeStagingFolder()

@@ -18,6 +18,7 @@ checkElevated()
 }
 
 checkElevated
+checkTargetDir $TARGET_DIR
 echo "processing $(echo $JOBS | wc -w) jobs"
 prepareStagingFolder
 for JOB in $JOBS
@@ -25,5 +26,6 @@ do
 	echo -e "\tprocessing $JOB"
 	processJob $JOB | sed 's/^/\t\t/'
 done
+copyToTargetFolder $TARGET_DIR
 removeStagingFolder
 echo "all done"

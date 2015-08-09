@@ -66,3 +66,20 @@ exportRegistryKey()
 	echo "exporting registry key: $REGISTRY_KEY_NAME"
 	regedit /e $(cygpath --windows $(stagingFolder)/$SIMPLE_NAME.reg) $REGISTRY_KEY_NAME
 }
+
+checkTargetDir()
+{
+	local TARGET_DIR=$1
+	[ -z "$TARGET_DIR" ] && die "target folder not set"
+	if [ -e "$TARGET_DIR" ];
+	then
+		[ "$(ls -A $TARGET_DIR)" ] && die "target folder is not empty"
+	fi
+}
+
+copyToTargetFolder()
+{
+	local TARGET_DIR=$1
+	mkdir --parents $TARGET_DIR || die "cannot create target folder"
+	cp -rf $(stagingFolder)/* $TARGET_DIR/ || die "cannot copy to target folder"
+}

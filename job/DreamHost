@@ -1,0 +1,34 @@
+#!/bin/bash
+
+source ./helper
+
+CONFIG_FILE=config/DreamHost.config
+TARGET_FOLDER=$(stagingFolder)/DreamHost
+
+mkdir --parents $TARGET_FOLDER || die "cannot create folder for DreamHost: $TARGET_FOLDER"
+
+[ -e $CONFIG_FILE ] || die "need config file $CONFIG_FILE"
+
+handleConfigurationLine() {
+	USER_AT_HOST=$1
+
+	EXTENSION=tar.gz
+	echo "$USER_AT_HOST:"
+	# note that /tmp is shared with other users, don't want to use that
+	BACKUP_FILE_NAME=backup.$EXTENSION
+
+	echo -e "\tcreate remote $EXTENSION file"
+	ssh \
+		$USER_AT_HOST \
+		'BACKUP_FILE_NAME='$BACKUP_FILE_NAME' ; rm -f $BACKUP_FILE_NAME ; tar -zcf $BACKUP_FILE_NAME $(ls -A | grep -Ev "^($BACKUP_FILE|logs|Maildir|.+\.log)$")' \
+		|| die "problem creating remote $EXTENSION file for $USER_AT_HOST over ssh"
+
+	echo -e "\tdownload remote $EXTENSION file"
+	scp $USER_AT_HOST:$BACKUP_FILE_NAME $TARGET_FOLDER/$USER_AT_HOST.$EXTENSION \
+		|| die "problem downloading remote $EXTENSION file for $USER_AT_HOST over scp"
+}
+
+while read -u 10 CONFIGURATION_LINE;
+do
+	handleConfigurationLine $CONFIGURATION_LINE
+done 10< <(grep -vE "^#" $CONFIG_FILE)

@@ -1,0 +1,37 @@
+#!/bin/bash
+
+source ./helper
+
+CONFIG_FILE=config/MysqlOverSsh.config
+TARGET_FOLDER=$(stagingFolder)/MysqlOverSsh
+
+mkdir --parents $TARGET_FOLDER || die "cannot create folder for DreamHost: $TARGET_FOLDER"
+
+[ -e $CONFIG_FILE ] || die "need config file $CONFIG_FILE"
+
+handleConfigurationLine() {
+	USER_AT_HOST=$1
+	DB_HOST=$2
+	DB_USER=$3
+	DB_PASSWORD=$4
+	DB_INSTANCE=$5
+
+	EXTENSION=mysqldump.gz
+	echo "$DB_USER@$DB_HOST:"
+	BACKUP_FILE_NAME=$DB_INSTANCE.$EXTENSION
+
+	echo -e "\tcreate remote $BACKUP_FILE_NAME file"
+	ssh \
+		$USER_AT_HOST \
+		"mysqldump -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_INSTANCE | gzip > $BACKUP_FILE_NAME" \
+		|| die "problem creating remote $BACKUP_FILE_NAME file for $DB_USER@$DB_HOST over ssh"
+
+	echo -e "\tdownload remote $BACKUP_FILE_NAME file"
+	scp $USER_AT_HOST:$BACKUP_FILE_NAME $TARGET_FOLDER/$USER_AT_HOST.$DB_HOST.$DB_INSTANCE.$EXTENSION \
+		|| die "problem downloading remote $BACKUP_FILE_NAME file for $DB_USER@$DB_HOST over scp"
+}
+
+while read -u 10 CONFIGURATION_LINE;
+do
+	handleConfigurationLine $CONFIGURATION_LINE
+done 10< <(grep -vE "^#" $CONFIG_FILE)

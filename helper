@@ -11,8 +11,9 @@ die()
 
 prepareStagingFolder()
 {
+	STAGING_FOLDER_IDEMPOTENT=$1
 	echo "preparing staging folder: $(stagingFolder)"
-	[ -z $STAGING_FOLDER_IDEMPOTENT ] && [ -e $(stagingFolder) ] && die "staging folder already exists: $(stagingFolder)"
+	[ "$STAGING_FOLDER_IDEMPOTENT" == "no" ] && [ -e $(stagingFolder) ] && die "staging folder already exists: $(stagingFolder)"
 	mkdir --parents $(stagingFolder)
 }
 

@@ -44,8 +44,13 @@ checkElevated()
 
 checkElevated
 checkTargetDir $TARGET_DIR
+if [ -z "$RESUME_FROM" ];
+then
+	prepareStagingFolder "no"
+else
+	prepareStagingFolder "yes"
+fi
 echo "processing $(echo $JOBS | wc -w) jobs"
-prepareStagingFolder
 for JOB in $JOBS
 do
 	if [ ! -z "$RESUME_FROM" ];

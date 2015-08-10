@@ -82,5 +82,6 @@ copyToTargetFolder()
 {
 	local TARGET_DIR=$1
 	mkdir --parents $TARGET_DIR || die "cannot create target folder"
+	echo "copying to target folder $TARGET_DIR"
 	cp -rf $(stagingFolder)/* $TARGET_DIR/ || die "cannot copy to target folder"
 }

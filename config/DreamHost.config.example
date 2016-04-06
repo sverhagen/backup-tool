@@ -1,5 +1,0 @@
-# copy a .config.example file to .config for it to work
-#
-# this file points to DreamHost hosts in a way that's understood by ssh:
-# user@host
-# e.g. user@example.com

@@ -1,4 +1,0 @@
-# copy a .config.example file to .config for it to work
-#
-# this file points to a Mysql server, reachable over ssh:
-# ssh-user@ssh-host db-host db-user db-password db-instance

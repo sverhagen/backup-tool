@@ -1,0 +1,18 @@
+jobs:
+- module: job.cygwinhome
+- module: job.desktop
+- module: job.downloads
+- module: job.virtuawin
+- module: job.filezillaconfig
+- module: job.puttyconfig
+- module: job.mysqloverssh # you can have multiple of these
+  configuration:
+    user_at_host: user@database.host.name.com
+    database:
+        host: another.host.internally
+        user_name: another_user
+        password: my_password
+        instance: my_database_instance
+- module: job.webhost # you can have multiple of these
+  configuration:
+    user_at_host: some_user@host.name.com

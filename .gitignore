@@ -1,1 +1,4 @@
 *.config
+backup-tool.yaml
+*.pyc
+*.iml

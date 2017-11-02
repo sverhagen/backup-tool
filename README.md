@@ -19,8 +19,12 @@ Simple scripts to backup my computer
 
 The scripts assume you're running within [Cygwin](https://cygwin.com/). Windows Command Prompt is horror, Cygwin rocks.
 
+For Cygwin `python3-dev` is required.
+
 Requirements:
 
-- Python 2.7-ish
+- Python 3-ish
+- `pip install --upgrade pip`
+- `pip install --upgrade setuptools`
 - Python package `Fabric`
 - Python package `PyYAML`

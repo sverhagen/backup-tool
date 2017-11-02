@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import click
 import importlib
 import logging
@@ -59,7 +61,7 @@ class BackupTool:
                 job = job_class(job_configuration, self.staging_folder)
                 self.jobs.append(job)
                 log.info("loaded {}".format(job))
-            except StandardError as e:
+            except Exception as e:
                 raise RuntimeError("cannot instantiate job class for module {}: {}".format(job_module, e))
 
     def _execute_jobs(self, resume_from):
@@ -77,8 +79,8 @@ class BackupTool:
             os.makedirs(self.staging_folder)
 
     def _list_staging_folder(self):
-        print
-        print "overview of backup results:"
+        print()
+        print("overview of backup results:")
 
         folders_with_size = {}
         for root, dirs, file_names in os.walk(self.staging_folder, topdown=False):
@@ -88,12 +90,12 @@ class BackupTool:
 
             if root == self.staging_folder:
                 for file_name in file_names:
-                    print "- file {}: {} bytes".format(file_name, os.path.getsize(os.path.join(root, file_name)))
+                    print("- file {}: {} bytes".format(file_name, os.path.getsize(os.path.join(root, file_name))))
 
             if self.staging_folder in (root, os.path.dirname(root)):
-                print "- folder {}: {} bytes".format(root, my_size)
+                print("- folder {}: {} bytes".format(root, my_size))
 
-        print
+        print()
 
     def _assert_target_folder(self):
         if os.path.isdir(self.target_folder):

@@ -2,3 +2,4 @@
 backup-tool.yaml
 *.pyc
 *.iml
+.idea

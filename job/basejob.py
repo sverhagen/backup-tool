@@ -58,5 +58,6 @@ class BaseJob:
         output_filename = "{}/{}.reg".format(self.output_folder, name)
         windows_output_filename = self._get_cygpath_windows(output_filename)
         args = ["regedit", "/e", windows_output_filename, key]
-        if subprocess.call(args):
-            raise RuntimeError("unexpected return code: {}".format(process.returncode))
+        returncode = subprocess.call(args)
+        if returncode:
+            raise RuntimeError("unexpected return code: {}".format(returncode))

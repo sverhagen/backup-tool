@@ -1,4 +1,4 @@
-from basejob import BaseJob
+from job.basejob import BaseJob
 
 class Job(BaseJob):
     def execute(self):

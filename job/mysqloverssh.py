@@ -3,7 +3,7 @@ import re
 from fabric.api import env
 from fabric.operations import run, get
 
-from basejob import BaseJob
+from job.basejob import BaseJob
 
 
 log = logging.getLogger(__name__)

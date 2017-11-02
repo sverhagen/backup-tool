@@ -1,4 +1,5 @@
 jobs:
+- module: job.backuptoolconfig
 - module: job.cygwinhome
 - module: job.desktop
 - module: job.downloads

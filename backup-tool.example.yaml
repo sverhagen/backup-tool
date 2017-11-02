@@ -15,4 +15,5 @@ jobs:
         instance: my_database_instance
 - module: job.webhost # you can have multiple of these
   configuration:
+    exclude_patterns: pattern,pattern
     user_at_host: some_user@host.name.com

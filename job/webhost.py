@@ -28,10 +28,12 @@ class Job(BaseJob):
     def _get_create_backup_file_command(self, backup_file_name):
         list_source_files = "ls -A | grep -Ev \"^($BACKUP_FILE|logs|Maildir|.+\.log)$\""
         ignore_failed_read = "--ignore-failed-read" if self.configuration.get("ignore_failed_read", False) else ""
+        excludes = " ".join(
+            "--exclude={}".format(exclude) for exclude in self.configuration.get("exclude_patterns", "").split(","))
         create_backup_file = "BACKUP_FILE_NAME={} ; " \
                              "rm -f $BACKUP_FILE_NAME ; " \
-                             "tar {} -zcf $BACKUP_FILE_NAME $({})".format(backup_file_name, ignore_failed_read,
-                                                                          list_source_files)
+                             "tar {} {} -zcf $BACKUP_FILE_NAME $({})".format(backup_file_name, ignore_failed_read,
+                                                                             excludes, list_source_files)
         return create_backup_file
 
     def _get_output_file_name(self, job_type):

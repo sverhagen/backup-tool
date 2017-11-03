@@ -18,7 +18,12 @@ class Job(BaseJob):
         env.host_string = self._get_user_at_host_configuration()
         backup_file_name = "backup.tar.gz"
         log.info("creating backup file remotely for: {}".format(self._get_user_at_host_configuration()))
-        run(self._get_create_backup_file_command(backup_file_name), shell=False)
+        run_command = self._get_create_backup_file_command(backup_file_name)
+        attribute_string = run(run_command, shell=False, warn_only=True)
+        if attribute_string.return_code:
+            raise Exception("failed with return code {} when running command: {}".format(
+                attribute_string.return_code, run_command))
+
         log.info("downloading backup file: {}".format(self._get_user_at_host_configuration()))
         get(backup_file_name, self._get_output_file_name("WebHost"))
 

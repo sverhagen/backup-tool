@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 import click
+import ctypes
 import importlib
 import logging
 import os
 import yaml
 import shutil
-# from win32com.shell import shell
 
 logging.basicConfig(format="%(asctime)-15s %(levelname)s: %(message)s")
 log = logging.getLogger(__name__)
@@ -15,9 +15,10 @@ log.setLevel(logging.INFO)
 class ElevationHelper:
     @staticmethod
     def assert_elevated():
-        # if not shell.IsUserAnAdmin():
-        #     raise RuntimeError("elevation required (Run As Administrator)")
-        pass
+        shell32 = ctypes.cdll.LoadLibrary("shell32.dll")
+
+        if not shell32.IsUserAnAdmin():
+            raise RuntimeError("elevation required (Run As Administrator)")
 
 
 class BackupTool:
@@ -33,6 +34,7 @@ class BackupTool:
         self._load_jobs()
 
     def backup(self, resume_from):
+        ElevationHelper().assert_elevated()
         self._prepare_staging_folder()
         self._execute_jobs(resume_from)
 
@@ -71,7 +73,11 @@ class BackupTool:
         log.info("executing {} jobs: {}".format(len(selected_jobs), ", ".join([str(job) for job in selected_jobs])))
         for job in selected_jobs:
             log.info("executing {}".format(job))
-            job.execute()
+            try:
+                job.execute()
+            except Exception as e:
+                log.warning("problem executing job {}: {}".format(job, str(e)))
+                raise
 
     def _prepare_staging_folder(self):
         if not os.path.exists(self.staging_folder):

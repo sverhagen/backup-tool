@@ -21,6 +21,11 @@ The scripts assume you're running within [Cygwin](https://cygwin.com/). Windows 
 
 For Cygwin `python3-dev` is required.
 
+Usage:
+
+- Create `backup-tool.yaml` configuration file (see `backup-tool.example.yaml`)
+- Run `./backup-tool.py --help` to see commands and options
+
 Requirements:
 
 - Python 3-ish

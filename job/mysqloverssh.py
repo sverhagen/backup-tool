@@ -14,6 +14,10 @@ class Job(BaseJob):
     def __str__(self):
         return "{}[{}]".format(BaseJob.__str__(self), self.configuration["database"]["host"])
 
+    def is_name(self, name):
+        return BaseJob.is_name(self, name) \
+               or name == "{}[{}]".format(self.__module__, self.configuration["database"]["host"])
+
     def execute(self):
         env.host_string = self._get_user_at_host_configuration()
         backup_file_name = "backup.mysql.gz"

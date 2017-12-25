@@ -19,7 +19,7 @@ class BaseJob:
         return "job {}".format(self.__module__)
 
     def is_name(self, name):
-        return name in (self.__module__, "{}.{}".format(self.__module__, self.__class__.__name__))
+        return name in [self.__module__, "{}.{}".format(self.__module__, self.__class__.__name__), self.__str__()]
 
     def _validate_configuration(self, configuration):
         pass

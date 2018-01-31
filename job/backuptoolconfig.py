@@ -12,7 +12,7 @@ class Job(BaseJob):
         super().__init__(*args, **kwargs)
         self.repo = Repo(".")
 
-    def execute(self):
+    def execute(self, context):
         current_folder = os.getcwd()
         self._copy_files(Job.TARGET_FOLDER, current_folder, "*.yaml")
         self._write_git_information()

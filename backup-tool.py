@@ -1,16 +1,20 @@
 #!/usr/bin/env python
 
-import click
 import ctypes
 import importlib
 import logging
 import os
-import yaml
 import shutil
+
+import click
+import yaml
+
+from context import Context
 
 logging.basicConfig(format="%(asctime)-15s %(levelname)s: %(message)s")
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
+
 
 class ElevationHelper:
     @staticmethod
@@ -34,9 +38,11 @@ class BackupTool:
         self._load_jobs()
 
     def backup(self, resume_from):
-        ElevationHelper().assert_elevated()
+        context = Context()
+        if context.is_windows():
+            ElevationHelper().assert_elevated()
         self._prepare_staging_folder()
-        self._execute_jobs(resume_from)
+        self._execute_jobs(resume_from, context)
 
     def copy_to_target_folder(self):
         log.info("copying from staging folder {} to target folder {}".format(self.staging_folder, self.target_folder))
@@ -66,15 +72,16 @@ class BackupTool:
             except Exception as e:
                 raise RuntimeError("cannot instantiate job class for module {}: {}".format(job_module, e))
 
-    def _execute_jobs(self, resume_from):
-        resume_from_index = next(index for index, job in enumerate(self.jobs) if job.is_name(resume_from)) if resume_from else 0
+    def _execute_jobs(self, resume_from, context):
+        resume_from_index = next(
+            index for index, job in enumerate(self.jobs) if job.is_name(resume_from)) if resume_from else 0
         selected_jobs = self.jobs[resume_from_index:]
 
         log.info("executing {} jobs: {}".format(len(selected_jobs), ", ".join([str(job) for job in selected_jobs])))
         for job in selected_jobs:
             log.info("executing {}".format(job))
             try:
-                job.execute()
+                job.execute(context)
             except Exception as e:
                 log.warning("problem executing job {}: {}".format(job, str(e)))
                 raise
@@ -91,7 +98,7 @@ class BackupTool:
         folders_with_size = {}
         for root, dirs, file_names in os.walk(self.staging_folder, topdown=False):
             size_files = sum(os.path.getsize(os.path.join(root, file_name)) for file_name in file_names)
-            size_sub_folders = sum(folders_with_size[os.path.join(root,d)] for d in dirs)
+            size_sub_folders = sum(folders_with_size[os.path.join(root, d)] for d in dirs)
             my_size = folders_with_size[root] = size_files + size_sub_folders
 
             if root == self.staging_folder:
@@ -134,6 +141,7 @@ def backup(target_folder, staging_folder, resume_from, leave_staging_folder):
     backup_tool.remove_staging_folder(leave_staging_folder)
 
     log.info("all done")
+
 
 if __name__ == '__main__':
     backup()

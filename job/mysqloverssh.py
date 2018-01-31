@@ -18,7 +18,7 @@ class Job(BaseJob):
         return BaseJob.is_name(self, name) \
                or name == "{}[{}]".format(self.__module__, self.configuration["database"]["host"])
 
-    def execute(self):
+    def execute(self, context):
         env.host_string = self._get_user_at_host_configuration()
         backup_file_name = "backup.mysql.gz"
         log.info("creating MySQL backup file remotely for: {}".format(self._get_user_at_host_configuration()))

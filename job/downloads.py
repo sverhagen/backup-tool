@@ -2,6 +2,6 @@ import os
 from job.basejob import BaseJob
 
 class Job(BaseJob):
-    def execute(self):
-        downloads_location = "{}/Downloads".format(os.environ["USERPROFILE"])
+    def execute(self, context):
+        downloads_location = "{}/Downloads".format(context.home_folder)
         self._package_folder("Downloads", downloads_location)

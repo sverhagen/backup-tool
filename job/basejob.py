@@ -2,12 +2,11 @@ import glob
 import logging
 import os
 import shutil
-import subprocess
 import tarfile
-
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
+
 
 class BaseJob:
     def __init__(self, configuration, output_folder):
@@ -44,20 +43,9 @@ class BaseJob:
         if not os.path.exists(absolute_target_folder):
             os.makedirs(absolute_target_folder)
 
-        log.info("copying {} from source folder {} to target folder {}".format(extensions_mask, source_folder, target_folder))
+        log.info("copying {} from source folder {} to target folder {}".format(extensions_mask, source_folder,
+                                                                               target_folder))
         files = glob.iglob(os.path.join(source_folder, extensions_mask))
         for file in files:
             if os.path.isfile(file):
                 shutil.copy2(file, absolute_target_folder)
-
-    def _get_cygpath_windows(self, path):
-        args = ["cygpath", "--windows", path]
-        return subprocess.check_output(args).split()[0]
-
-    def _export_registry_key(self, name, key):
-        output_filename = "{}/{}.reg".format(self.output_folder, name)
-        windows_output_filename = self._get_cygpath_windows(output_filename)
-        args = ["regedit", "/e", windows_output_filename, key]
-        returncode = subprocess.call(args)
-        if returncode:
-            raise RuntimeError("unexpected return code: {}".format(returncode))
